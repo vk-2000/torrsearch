@@ -1,15 +1,13 @@
-const torrents = require("./torrents");
+const torrents = require('./torrents');
 
 const listSites = () => {
-  const sites = Object.keys(torrents).map((site) => {
-    return site;
-  });
+  const sites = Object.keys(torrents).map((site) => site);
   return sites;
 };
 
 const search = async (query, limit, site) => {
   if (!listSites().includes(site)) {
-    throw new Error("Invalid site specified");
+    throw new Error('Invalid site specified');
   }
   const torrentSite = new torrents[site]();
   const results = await torrentSite.search(query, limit);
@@ -17,20 +15,21 @@ const search = async (query, limit, site) => {
 };
 
 const searchMany = async (query, limitEach, sites) => {
-  if (sites === undefined) {
-    sites = listSites();
+  let torrentSites = sites;
+  if (torrentSites === undefined) {
+    torrentSites = listSites();
   }
-  if (typeof sites === "string") {
-    sites = [sites];
+  if (typeof torrentSites === 'string') {
+    torrentSites = [sites];
   }
-  if (sites.length === 0) {
-    throw new Error("No sites specified");
+  if (torrentSites.length === 0) {
+    throw new Error('No sites specified');
   }
-  if (sites.some((site) => !listSites().includes(site))) {
-    throw new Error("Invalid site specified");
+  if (torrentSites.some((site) => !listSites().includes(site))) {
+    throw new Error('Invalid site specified');
   }
   const result = {};
-  const promises = sites.map(async (site) => {
+  const promises = torrentSites.map(async (site) => {
     const torrentSite = new torrents[site]();
     const siteResults = await torrentSite.search(query, limitEach);
     result[site] = siteResults;
