@@ -1,0 +1,19 @@
+{
+  "name": "torrsearch",
+  "version": "1.0.0",
+  "description": "Search torrents",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vk-2000/torrsearch.git"
+  },
+  "author": "vk-2000",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.5.0",
+    "cheerio": "^1.0.0-rc.12"
+  }
+}
