@@ -6,6 +6,9 @@ const listSites = () => {
 };
 
 const search = async (query, limit, site) => {
+  if (site === undefined) {
+    throw new Error('No site specified');
+  }
   if (!listSites().includes(site)) {
     throw new Error('Invalid site specified');
   }
