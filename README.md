@@ -2,20 +2,20 @@
 
 **Torrsearch** is a Node.js library for searching torrents on various torrent sites.
 
-##Installation
+<h3>Installation</h3>
 
 ```bash
 npm install git+https://github.com/vk-2000/torrsearch.git
 ```
 
-##API
+<h3>API</h3>
 
-<h5>listSites()</h5>
+<h4>listSites()</h4>
 
 Returns a list of supported sites.
 
 
-<h5>search(query, limit, site)</h5>
+<h4>search(query, limit, site)</h4>
 
 Searches for torrents from a single site.
 
@@ -25,7 +25,7 @@ Searches for torrents from a single site.
 | limit | <code>number</code> | Number of results to return |
 | site | <code>string</code> | Site to search from |
 
-<h5>searchMany(query, limit, sites)</h5>
+<h4>searchMany(query, limit, sites)</h4>
 
 Searches for torrents from multiple sites.
 
@@ -36,7 +36,7 @@ Searches for torrents from multiple sites.
 | sites | <code>Array&lt;string&gt;</code> | Sites to search from |
 
 
-##Usage
+<h3>Usage</h3>
 
 ```javascript
 const torrsearch = require('torrsearch');
