@@ -1,9 +1,9 @@
-const Torrent1337x = require('./1337x');
-const TorrentTheRarbg = require('./theRarbg');
-const TorrentTorrentz2 = require('./torrentz2');
+const torrent1337x = require('./1337x');
+const torrentTheRarbg = require('./theRarbg');
+const torrentTorrentz2 = require('./torrentz2');
 
 module.exports = {
-  '1337x': Torrent1337x,
-  theRarbg: TorrentTheRarbg,
-  torrentz2: TorrentTorrentz2,
+  '1337x': torrent1337x,
+  theRarbg: torrentTheRarbg,
+  torrentz2: torrentTorrentz2,
 };

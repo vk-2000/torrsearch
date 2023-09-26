@@ -12,8 +12,7 @@ const search = async (query, limit, site) => {
   if (!listSites().includes(site)) {
     throw new Error('Invalid site specified');
   }
-  const torrentSite = new torrents[site]();
-  const results = await torrentSite.search(query, limit);
+  const results = await torrents[site].search(query, limit);
   return results;
 };
 
@@ -33,8 +32,7 @@ const searchMany = async (query, limitEach, sites) => {
   }
   const result = {};
   const promises = torrentSites.map(async (site) => {
-    const torrentSite = new torrents[site]();
-    const siteResults = await torrentSite.search(query, limitEach);
+    const siteResults = await torrents[site].search(query, limitEach);
     result[site] = siteResults;
   });
   await Promise.all(promises);
