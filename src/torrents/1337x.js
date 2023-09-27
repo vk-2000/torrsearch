@@ -1,5 +1,5 @@
 const cheerio = require('cheerio');
-const axios = require('axios');
+const axios = require('axios').default;
 
 const url = 'https://1337x.to';
 
@@ -53,9 +53,12 @@ const search = async (query, limit) => {
   // console.log(torrentLinks);
   try {
     const torrents = await Promise.all(
-      torrentLinks.map(async (torrentLink) => {
+      torrentLinks.map(async (torrentLink, i) => {
         const response = await axios.get(`${url}${torrentLink}`);
-        return parseTorrent(response.data);
+        return {
+          index: i,
+          ...parseTorrent(response.data),
+        };
       }),
     );
     return torrents;

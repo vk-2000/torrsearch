@@ -1,5 +1,5 @@
 const cheerio = require('cheerio');
-const axios = require('axios');
+const axios = require('axios').default;
 
 const url = 'https://torrentz2.nz';
 const search = async (query, limit) => {
@@ -19,6 +19,7 @@ const search = async (query, limit) => {
       }
       rows.each((i, el) => {
         const torrent = {};
+        torrent.index = i;
         torrent.title = $(el).find('dt > a').text();
         torrent.magnetLink = $(el)
           .find('dd > span:nth-child(1) > a')

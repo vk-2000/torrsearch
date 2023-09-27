@@ -1,14 +1,15 @@
 const cheerio = require('cheerio');
-const axios = require('axios');
+const axios = require('axios').default;
 
 const url = 'https://therarbg.com';
 
 const parseTorrent = (data) => {
   const torrent = {};
   const $ = cheerio.load(data);
-  const [seeders, leechers] = $('tr:has(th:contains("Peers:")) > td')
-    .text()
-    .match(/Seeders:\s(\d+),\sLeechers:\s(\d+),/) || [0, 0];
+  // eslint-disable-next-line no-unused-vars
+  const [_, seeders, leechers] = /Seeders:\s(\d+),\sLeechers:\s(\d+),/.exec(
+    $('tr:has(th:contains("Peers:")) > td').text(),
+  ) || [0, 0, 0];
   torrent.seeds = seeders;
   torrent.leeches = leechers;
 
@@ -56,10 +57,12 @@ const search = async (query, limit) => {
   // console.log(torrentLinks);
   try {
     const torrents = await Promise.all(
-      torrentLinks.map(async (torrentLink) => {
+      torrentLinks.map(async (torrentLink, i) => {
         const response = await axios.get(`${url}${torrentLink}`);
-        const torrent = parseTorrent(response.data);
-        return torrent;
+        return {
+          index: i,
+          ...parseTorrent(response.data),
+        };
       }),
     );
     return torrents;
