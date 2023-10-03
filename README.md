@@ -22,6 +22,7 @@ Searches for torrents from a single site.
 | Parameter | Type | Description |
 | --- | --- | --- |
 | query | <code>string</code> | Search query |
+| offset | <code>number</code> | Number of results to skip |
 | limit | <code>number</code> | Number of results to return |
 | site | <code>string</code> | Site to search from |
 

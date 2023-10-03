@@ -5,14 +5,14 @@ const listSites = () => {
   return sites;
 };
 
-const search = async (query, limit, site) => {
+const search = async (query, offset, limit, site) => {
   if (site === undefined) {
     throw new Error('No site specified');
   }
   if (!listSites().includes(site)) {
     throw new Error('Invalid site specified');
   }
-  const results = await torrents[site].search(query, limit);
+  const results = await torrents[site].search(query, offset, limit);
   return results;
 };
 

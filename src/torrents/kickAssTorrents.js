@@ -2,6 +2,7 @@ const cheerio = require('cheerio');
 const axios = require('axios').default;
 
 const url = 'https://kickasstorrents.to';
+const resultsPerPage = 20;
 
 const parseTorrent = (data) => {
   const torrent = {};
@@ -15,9 +16,10 @@ const parseTorrent = (data) => {
   return torrent;
 };
 
-const search = async (query, limit) => {
+const search = async (query, offset, limit) => {
   const formattedQuery = query.trim().replace(/ /g, '%20');
-  let page = 1;
+  const initPage = Math.floor(offset / resultsPerPage) + 1;
+  let page = initPage;
   const torrentLinks = [];
   try {
     while (torrentLinks.length < limit) {
@@ -29,6 +31,9 @@ const search = async (query, limit) => {
       const rows = $('div.torrentname');
       if (rows.length === 0) {
         break;
+      }
+      if (page === initPage) {
+        rows.splice(0, offset % resultsPerPage);
       }
       rows.each((i, el) => {
         if (torrentLinks.length < limit) {

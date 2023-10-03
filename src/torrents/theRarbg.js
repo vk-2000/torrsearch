@@ -2,6 +2,7 @@ const cheerio = require('cheerio');
 const axios = require('axios').default;
 
 const url = 'https://therarbg.com';
+const resultsPerPage = 40;
 
 const parseTorrent = (data) => {
   const torrent = {};
@@ -25,9 +26,10 @@ const parseTorrent = (data) => {
   return torrent;
 };
 
-const search = async (query, limit) => {
+const search = async (query, offset, limit) => {
   const formattedQuery = query.trim().replace(/ /g, '%20');
-  let page = 1;
+  const initPage = Math.floor(offset / resultsPerPage) + 1;
+  let page = initPage;
   const torrentLinks = [];
 
   try {
@@ -36,10 +38,16 @@ const search = async (query, limit) => {
       const response = await axios.get(
         `${url}/get-posts/keywords:${formattedQuery}/?page=${page}`,
       );
+      if (response.request.res.responseUrl !== `${url}/get-posts/keywords:${formattedQuery}/?page=${page}`) {
+        break;
+      }
       const $ = cheerio.load(response.data);
       const rows = $('td.cellName');
       if (rows.length === 0) {
         break;
+      }
+      if (page === initPage) {
+        rows.splice(0, offset % resultsPerPage);
       }
       rows.each((i, el) => {
         if (torrentLinks.length < limit) {
@@ -52,6 +60,9 @@ const search = async (query, limit) => {
       page += 1;
     }
   } catch (error) {
+    if (error.response && error.response.status === 500) {
+      return [];
+    }
     throw new Error('No torrents found');
   }
   // console.log(torrentLinks);

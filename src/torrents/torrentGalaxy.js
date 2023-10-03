@@ -2,9 +2,11 @@ const cheerio = require('cheerio');
 const axios = require('axios').default;
 
 const url = 'https://torrentgalaxy.to';
-const search = async (query, limit) => {
+const resultsPerPage = 50;
+const search = async (query, offset, limit) => {
   const formattedQuery = query.trim().replace(/ /g, '+');
-  let page = 1;
+  const initPage = Math.floor(offset / resultsPerPage) + 1;
+  let page = initPage;
   const torrents = [];
   try {
     while (torrents.length < limit) {
@@ -18,6 +20,10 @@ const search = async (query, limit) => {
       if (rows.length === 0) {
         break;
       }
+      if (page === initPage) {
+        rows.splice(0, offset % resultsPerPage);
+      }
+
       rows.each((i, el) => {
         const torrent = {};
         torrent.index = i;

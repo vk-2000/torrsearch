@@ -2,6 +2,7 @@ const cheerio = require('cheerio');
 const axios = require('axios').default;
 
 const url = 'https://1337x.to';
+const resultsPerPage = 20;
 
 const parseTorrent = (data) => {
   const torrent = {};
@@ -22,9 +23,10 @@ const parseTorrent = (data) => {
   return torrent;
 };
 
-const search = async (query, limit) => {
+const search = async (query, offset, limit) => {
   const formattedQuery = query.trim().replace(/ /g, '+');
-  let page = 1;
+  const initPage = Math.floor(offset / resultsPerPage) + 1;
+  let page = initPage;
   const torrentLinks = [];
   try {
     while (torrentLinks.length < limit) {
@@ -36,6 +38,9 @@ const search = async (query, limit) => {
       const rows = $('td.name');
       if (rows.length === 0) {
         break;
+      }
+      if (page === initPage) {
+        rows.splice(0, offset % resultsPerPage);
       }
       rows.each((i, el) => {
         if (torrentLinks.length < limit) {

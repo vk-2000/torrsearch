@@ -2,10 +2,12 @@ const cheerio = require('cheerio');
 const axios = require('axios').default;
 
 const url = 'https://solidtorrents.to';
-const search = async (query, limit) => {
+const resultsPerPage = 20;
+
+const search = async (query, offset, limit) => {
   const formattedQuery = query.trim().replace(/ /g, '+');
-  let page = 1;
-  let totalResults = -1;
+  const initPage = Math.floor(offset / resultsPerPage) + 1;
+  let page = initPage;
   const torrents = [];
   try {
     while (torrents.length < limit) {
@@ -14,17 +16,12 @@ const search = async (query, limit) => {
         `${url}/search?q=${formattedQuery}&page=${page}`,
       );
       const $ = cheerio.load(response.data);
-      if (totalResults === -1) {
-        totalResults = parseInt(
-          $('div.search-stats > span > b:nth-child(1)')
-            .text()
-            .replace(/,/g, ''),
-          10,
-        );
-      }
-      const rows = $('li.search-result');
+      const rows = $('li.search-result:has(div.links > a)');
       if (rows.length === 0) {
         break;
+      }
+      if (page === initPage) {
+        rows.splice(0, offset % resultsPerPage);
       }
       rows.each((i, el) => {
         const torrent = {};
@@ -43,9 +40,6 @@ const search = async (query, limit) => {
         }
         return true;
       });
-      if (torrents.length >= totalResults) {
-        break;
-      }
       page += 1;
     }
     return torrents;
